@@ -11,8 +11,14 @@ Getting started
 ---------------
 
 Copy _template_ to /etc/init.d and rename it to something
-meaningful. Then edit the script and enter that name after _Provides:_
-(between _### BEGIN INIT INFO_ and _### END INIT INFO_).
+meaningful. 
+
+Here's an example for an app called
+[algorithms](http://algorithms.ubercode.de):
+
+    /etc/inid.d/alorithms
+
+Then edit the script and enter that name after _Provides:_ (between _### BEGIN INIT INFO_ and _### END INIT INFO_).
 
 Now set the following three variables in the script:
 
@@ -29,12 +35,28 @@ The command line to start the process.
 The user that should execute the command (optional).
 If not set, the command will be called as root (via `sudo ...`).
 
-Here's an example for an app called
-[algorithms](http://algorithms.ubercode.de):
+    #!/bin/sh
+    ### BEGIN INIT INFO
+    # Provides: algorithms
+    # Required-Start:    $network $remote_fs $syslog
+    # Required-Stop:     $remote_fs $syslog
+    # Default-Start:     2 3 4 5
+    # Default-Stop:      0 1 6
+    # Short-Description: Start daemon at boot time
+    # Description:       Enable service provided by daemon.
+    ### END INIT INFO
 
     dir="/var/apps/algorithms"
     cmd="node server.js"
     user="node"
+
+
+Make Executable & install
+---------------
+To be able to use the script you have to change the file permissions and 'install' the script:
+    
+    sudo chmod 755 /etc/init.d/algorithms
+    sudo update-rc.d algorithms defaults
 
 Script usage
 ------------
@@ -70,6 +92,11 @@ Logging
 By default, standard output goes to _/var/log/scriptname.log_ and
 error output to _/var/log/scriptname.err_. If you're not happy with
 that, change the variables `stdout_log` and `stderr_log`.
+
+To view the running logs, you can tail the output log or error log:
+
+    tail -f /var/log/algorithms.log
+    tail -f /var/log/algorithms.err
 
 License
 -------
